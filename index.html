@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Paper Chain</title>
+        <link rel="stylesheet" href="style.css">
+        <script src="script.js" defer></script>
+        <script src="https://kit.fontawesome.com/da7fda860c.js" crossorigin="anonymous"></script>
+    </head>
+    <body>
+        <div class="title">
+            <div class="typewriter">
+                <h1>Paper Chain</h1>
+            </div>
+        </div>
+        <div class="main">
+            <div class="sidebar">
+                <div class="sidebar-coins">
+
+                    <div class="sidebar-coins-title">
+                        <h2>Coins</h2>
+                        <i class="fa-solid fa-plus add-coin-button"></i>
+                    </div>
+
+                </div>
+
+                <div class="sidebar-portfolio sidebar-item selected">
+                    <div class="item-main-info">
+                            <i class="fa-solid fa-circle-user item-logo"></i>
+                            <h2 class="item-name">Portfolio</h2>
+                        </div>
+                        <div class="item-price-info">
+                            <p class="item-price">PC$100,000.00</p>
+                            <div class="item-change positive">
+                                <i class="fa-solid fa-arrow-trend-up"></i>
+                                <div class="change-amount">+0.00%</div>
+                                <div class="change-interval">(1d)</div>
+                            </div>
+                        </div>
+                </div>
+            </div>
+            <div class="content">
+                
+            </div>
+        </div>
+        <div class="footer">
+            <p>Simulated Trading Only | Prices by <a href="https://www.livecoinwatch.com" target="_blank">Live Coin Watch</a> | Source on <a href="https://github.com/ConstintCreations/Paper-Chain" target="_blank">GitHub</a></p>
+        </div>
+
+        <div class="add-coin-modal modal">
+            <div class="modal-background">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2 class="modal-title">Search Coins</h2>
+                        <i class="fa-solid fa-xmark close-modal-button"></i>
+                    </div>
+                    <div class="modal-body">
+                        <input type="text" class="coin-search" placeholder="Search for a coin...">
+                        <div class="coin-results">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
