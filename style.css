@@ -79,7 +79,7 @@ body {
 .content {
     width: 100%;
     background-color: #27262b;
-    padding: 1em;
+    padding: 2em 3em;
     border-radius: 20px 0px 0px 20px;
     text-align: left;
 }
@@ -307,4 +307,140 @@ body {
 
 .modal {
     display: none;
+}
+
+.content .coin-content, .content .portfolio-content {
+    display: none;
+    height: 100%;
+    width: 100%;
+    flex-direction: column;
+    align-items: left;
+    justify-content: left;
+    color: #7f60e6;
+    gap: 1em;
+}
+
+.content .coin-content.active, .content .portfolio-content.active {
+    display: flex;
+}
+
+.content-title::after {
+    content: '';
+    display: block;
+    width: 100%;
+    height: 2px;
+    background-color: #7f60e6;
+    margin-top: 0.5em;
+}
+
+.portfolio-info-item {
+    color: #8b888f;
+}
+
+.coin-main-info {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2em;
+}
+
+.coin-info-item {
+    color: #8b888f;
+}
+
+.coin-actions {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 1em;
+}
+
+.action-button, .action-input {
+    border: 1px solid #646267;
+    background-color: #2e2d34;
+    color: #7f60e6;
+    padding: 0.5em 2em;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 1em;
+}
+
+.action-input {
+    cursor: text;
+    transition: border 0.3s ease-in-out;
+    width: 13em;
+}
+
+.action-input:focus {
+    border: 1px solid #e3deed;
+    outline: none;
+}
+
+.action-input::placeholder {
+    color: #7f60e6;
+}
+
+.action-button.buy-coin-button {
+    border: 1px solid #44c568;
+    color: #44c568;
+}
+
+.action-button.sell-coin-button {
+    border: 1px solid #e35e5e;
+    color: #e35e5e;
+}
+
+.action-amount {
+    color: #8b888f;
+    font-size: 0.8em;
+}
+
+.coin-chart {
+    background-color: #3c3b42;
+    border-radius: 20px;
+    width: 100%;
+    height: 100%;
+}
+
+.coin-stats {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2em;
+    width: 100%;
+    height: 100%;
+}
+
+.coin-stats-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+    width: 250px;
+}
+
+.coin-stats-info h1 {
+    text-align: center;
+}
+
+.coin-stats-info h1::after {
+    content: '';
+    display: block;
+    width: 100%;
+    height: 2px;
+    background-color: #7f60e6;
+}
+
+.hide {
+    display: none;
+}
+
+.up {
+    color: #1a7c36;
+}
+
+.down {
+    color: #8c2222;
 }

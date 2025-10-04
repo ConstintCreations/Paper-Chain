@@ -185,6 +185,8 @@ function loadCoinData(codes) {
 
 }
 
+let coinPrice = 120624.08;
+
 function loadSidebar() {
     const sidebarCoins = document.querySelector('.sidebar-coins');
     sidebarCoins.querySelectorAll('.sidebar-item').forEach(el => el.remove());
@@ -201,10 +203,10 @@ function loadSidebar() {
                             <h2 class="item-name">${coin.name} (${coin.code.replace(/_/g, '')})</h2>
                         </div>
                         <div class="item-price-info">
-                            <p class="item-price">PC$${coin.rate.toLocaleString("en-US", {
+                            <p class="item-price">${coin.rate.toLocaleString("en-US", {
                                 minimumFractionDigits: 2,
                                 maximumFractionDigits: 2
-                            })}</p>
+                            })} PC</p>
                             <div class="item-change ${coin.delta.day >= 1 ? 'positive' : 'negative'}">
                                 <i class="fa-solid ${coin.delta.day >= 1 ? 'fa-arrow-trend-up' : 'fa-arrow-trend-down'}"></i>
                                 <div class="change-amount">${coin.delta.day >= 1 ? '+' : ''}${((coin.delta.day-1)*100).toFixed(2)}%</div>
@@ -297,5 +299,20 @@ closeModalButton.addEventListener('click', () => {
 
     if (JSON.stringify(selectedCoins) !== JSON.stringify(coinCodes)) {
         saveCoinCodes(selectedCoins); 
+    }
+});
+
+const coinActionInput = document.querySelector('.action-input');
+const coinActionAmount = document.querySelector('.action-amount');
+
+coinActionInput.addEventListener('input', () => {
+    const amount = parseFloat(coinActionInput.value * coinPrice);
+    if (!isNaN(amount)) {
+        coinActionAmount.textContent = `${amount.toLocaleString("en-US", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        })} PC`;
+    } else {
+        coinActionAmount.textContent = '0.00 PC';
     }
 });
