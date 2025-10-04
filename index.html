@@ -5,6 +5,7 @@
         <link rel="stylesheet" href="style.css">
         <script src="script.js" defer></script>
         <script src="https://kit.fontawesome.com/da7fda860c.js" crossorigin="anonymous"></script>
+        <script src="/libs/chart.js/dist/chart.umd.js"></script>
     </head>
     <body>
         <div class="title">
@@ -39,27 +40,18 @@
                 </div>
             </div>
             <div class="content">
-                <div class="coin-content active">
+                <div class="coin-content">
                     <div class="content-title">
-                        <h1>Bitcoin (BTC)</h1>
+                        <h1>Bitcoin (BTC) - <span class="coin-info-item day up">+2.00%</span></h1>
                     </div>
                     <div class="coin-main-info">
                         <h2>Price: <span class="coin-price coin-info-item">120,624.08 PC</span></h2>
                         <h2>Market Cap: <span class="market-cap coin-info-item">2,403,821,349,066 PC</span></h2>
                     </div>
-                    <div class="coin-stats">
-                        <div class="coin-chart">
-                            Chart
-                        </div>
-                        <div class="coin-stats-info">
-                            <h1>Change</h1>
-                            <h2 class="hour-title">Hour: <span class="coin-info-item hour up">+1.42%</span></h2>
-                            <h2 class="day-title">Day: <span class="coin-info-item day up">+2.00%</span></h2>
-                            <h2 class="week-title">Week: <span class="coin-info-item week up">+6.32%</span></h2>
-                            <h2 class="month-title">Month: <span class="coin-info-item month down">-12.34%</span></h2>
-                            <h2 class="quarter-title">Qtr: <span class="coin-info-item quarter down">-88.62%</span></h2>
-                            <h2 class="year-title hide">Year: <span class="coin-info-item year down">-99.97%</span></h2>
-                        </div>
+                    <div class="coin-chart-container">
+                        <canvas class="coin-chart">
+                            
+                        </canvas>
                     </div>
                     <div class="coin-actions">
                         <div class="coin-action-buttons">
@@ -69,9 +61,18 @@
                         <input type="number" class="action-input" placeholder="Amount...">
                         <p class="action-amount">0.00 PC</p>
                     </div>
+                    <div class="coin-stats-info">
+                            <h1>Change:</h1>
+                            <h2 class="hour-title">Hour: <span class="coin-info-item hour up">+1.42%</span></h2>
+                            <h2 class="day-title">Day: <span class="coin-info-item day up">+2.00%</span></h2>
+                            <h2 class="week-title">Week: <span class="coin-info-item week up">+6.32%</span></h2>
+                            <h2 class="month-title">Month: <span class="coin-info-item month down">-12.34%</span></h2>
+                            <h2 class="quarter-title">Qtr: <span class="coin-info-item quarter down">-88.62%</span></h2>
+                            <h2 class="year-title hide">Year: <span class="coin-info-item year down">-99.97%</span></h2>
+                        </div>
                 </div>
 
-                <div class="portfolio-content">
+                <div class="portfolio-content active">
                     <div class="content-title">
                         <h1>Your Portfolio</h1>
                     </div>

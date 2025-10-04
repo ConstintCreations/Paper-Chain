@@ -1,162 +1,36 @@
-async function fetchCoinData(codes = ['BTC', 'ETH', 'XRP']) {
-    /*try {
-        const response = await fetch('/api/coin?symbol=' + codes.join(','));
-        const data = await response.json();
-        return data;
-    } catch (error) {
-        return null;
-    }*/
+let coinData;
+let historyData = {};
+let currentCoins;
+let selectedCoin = null;
 
-    return [
-  {
-    "name": "Bitcoin",
-    "symbol": "₿",
-    "rank": 1,
-    "age": 6117,
-    "color": "#fa9e32",
-    "png32": "https://lcw.nyc3.cdn.digitaloceanspaces.com/production/currencies/32/btc.png",
-    "png64": "https://lcw.nyc3.cdn.digitaloceanspaces.com/production/currencies/64/btc.png",
-    "webp32": "https://lcw.nyc3.cdn.digitaloceanspaces.com/production/currencies/32/btc.webp",
-    "webp64": "https://lcw.nyc3.cdn.digitaloceanspaces.com/production/currencies/64/btc.webp",
-    "exchanges": 164,
-    "markets": 1534,
-    "pairs": 468,
-    "categories": [],
-    "allTimeHighUSD": 124169.3844452126,
-    "circulatingSupply": 19928203,
-    "totalSupply": 19928203,
-    "maxSupply": 21000000,
-    "links": {
-      "website": "https://bitcoin.org",
-      "whitepaper": "https://bitcoin.org/bitcoin.pdf",
-      "twitter": null,
-      "reddit": "https://reddit.com/r/bitcoin",
-      "telegram": null,
-      "discord": null,
-      "medium": null,
-      "instagram": null,
-      "tiktok": null,
-      "youtube": null,
-      "linkedin": null,
-      "twitch": null,
-      "spotify": null,
-      "naver": null,
-      "wechat": null,
-      "soundcloud": null
-    },
-    "code": "BTC",
-    "rate": 120361.96212658589,
-    "volume": 61836701177,
-    "cap": 2398597614736,
-    "delta": {
-      "hour": 0.9979,
-      "day": 1.0115,
-      "week": 1.1004,
-      "month": 1.0787,
-      "quarter": 1.1122,
-      "year": 1.9806
+async function fetchCoinData(codes = ['BTC', 'ETH', 'XRP']) {
+    try {
+        const response = await fetch('/api/coins?codes=' + codes.join(','));
+        const data = await response.json();
+        coinData = data;
+    } catch (error) {
+        
     }
-  },
-  {
-    "name": "Ethereum",
-    "symbol": "Ξ",
-    "rank": 2,
-    "age": 3709,
-    "color": "#2f2f2f",
-    "png32": "https://lcw.nyc3.cdn.digitaloceanspaces.com/production/currencies/32/eth.png",
-    "png64": "https://lcw.nyc3.cdn.digitaloceanspaces.com/production/currencies/64/eth.png",
-    "webp32": "https://lcw.nyc3.cdn.digitaloceanspaces.com/production/currencies/32/eth.webp",
-    "webp64": "https://lcw.nyc3.cdn.digitaloceanspaces.com/production/currencies/64/eth.webp",
-    "exchanges": 348,
-    "markets": 6380,
-    "pairs": 3633,
-    "allTimeHighUSD": 4942.492362954442,
-    "circulatingSupply": 117762924,
-    "totalSupply": 117762924,
-    "maxSupply": null,
-    "links": {
-      "website": "https://ethereum.org/en/",
-      "whitepaper": "https://ethereum.org/en/whitepaper",
-      "twitter": "https://x.com/ethereum",
-      "reddit": "https://reddit.com/r/ethereum",
-      "telegram": null,
-      "discord": "https://discord.com/invite/ethereum-org",
-      "medium": null,
-      "instagram": null,
-      "tiktok": null,
-      "youtube": null,
-      "linkedin": null,
-      "twitch": null,
-      "spotify": null,
-      "naver": null,
-      "wechat": null,
-      "soundcloud": null
-    },
-    "code": "ETH",
-    "rate": 4475.328398782301,
-    "volume": 43634973445,
-    "cap": 527027758100,
-    "delta": {
-      "hour": 0.9999,
-      "day": 1.0273,
-      "week": 1.1476,
-      "month": 1.0363,
-      "quarter": 1.7775,
-      "year": 1.8966
-    }
-  },
-  {
-    "name": "XRP",
-    "rank": 3,
-    "age": 4442,
-    "color": "#242c2c",
-    "png32": "https://lcw.nyc3.cdn.digitaloceanspaces.com/production/currencies/32/xrp.png",
-    "png64": "https://lcw.nyc3.cdn.digitaloceanspaces.com/production/currencies/64/xrp.png",
-    "webp32": "https://lcw.nyc3.cdn.digitaloceanspaces.com/production/currencies/32/xrp.webp",
-    "webp64": "https://lcw.nyc3.cdn.digitaloceanspaces.com/production/currencies/64/xrp.webp",
-    "exchanges": 119,
-    "markets": 358,
-    "pairs": 157,
-    "categories": [
-      "smart_contract_platforms"
-    ],
-    "allTimeHighUSD": 3.91546307780967,
-    "circulatingSupply": 59871700035,
-    "totalSupply": 99985791876,
-    "maxSupply": 100000000000,
-    "links": {
-      "website": "https://ripple.com/",
-      "whitepaper": "https://ripple.com/files/ripple_consensus_whitepaper.pdf",
-      "twitter": "https://x.com/Ripple",
-      "reddit": "https://reddit.com/r/ripple",
-      "telegram": "https://t.me/Ripple",
-      "discord": null,
-      "medium": null,
-      "instagram": null,
-      "tiktok": null,
-      "youtube": "https://www.youtube.com/@ripple",
-      "linkedin": "https://www.linkedin.com/company/rippleofficial/",
-      "twitch": null,
-      "spotify": null,
-      "naver": null,
-      "wechat": null,
-      "soundcloud": null
-    },
-    "code": "XRP",
-    "rate": 3.030153689463152,
-    "volume": 5249321666,
-    "cap": 181420452755,
-    "delta": {
-      "hour": 0.9986,
-      "day": 1.0252,
-      "week": 1.0975,
-      "month": 1.0622,
-      "quarter": 1.3646,
-      "year": 5.7503
-    }
-  }
-]
 }
+
+async function fetchCoinHistory(code = 'BTC') {
+    try {
+        const response = await fetch('/api/coin/history?code=' + code);
+        const data = await response.json();
+        historyData[code] = data;
+        console.log(historyData);
+    } catch (error) {
+        
+    }
+}
+
+
+/*fetchCoinHistory('BTC').then(data => {
+    if (data) {
+        console.log('Coin History:', data);
+    }
+});*/
+
 
 /*fetchCoinData('BTC').then(data => {
     if (data) {
@@ -164,79 +38,118 @@ async function fetchCoinData(codes = ['BTC', 'ETH', 'XRP']) {
     }
 });*/
 
-const coinCodes = loadCoinCodes();
-saveCoinCodes(coinCodes);
+loadData();
 
-function saveCoinCodes(codes) {
-    localStorage.setItem('coinCodes', JSON.stringify(codes));
-    loadSidebar();
+function saveCoinData() {
+    localStorage.setItem('coinData', JSON.stringify(coinData));
 }
 
-function loadCoinCodes() {
-    const codes = localStorage.getItem('coinCodes');
-    return codes ? JSON.parse(codes) : ['BTC', 'ETH', 'XRP'];
-}
-
-function saveCoinData(data) {
-
-}
-
-function loadCoinData(codes) {
-
-}
-
-let coinPrice = 120624.08;
-
-function loadSidebar() {
-    const sidebarCoins = document.querySelector('.sidebar-coins');
-    sidebarCoins.querySelectorAll('.sidebar-item').forEach(el => el.remove());
-    if (coinCodes.length > 0) {
-        fetchCoinData(coinCodes).then(data => {
-            if (data) {
-                data.forEach(coin => {
-                    const coinElement = document.createElement('div');
-                    coinElement.classList.add('sidebar-item');
-                    coinElement.dataset.code = coin.code;
-                    coinElement.innerHTML = `
-                        <div class="item-main-info">
-                            <img src="${coin.png32}" alt="${coin.symbol ? coin.symbol : ""}" class="item-logo">
-                            <h2 class="item-name">${coin.name} (${coin.code.replace(/_/g, '')})</h2>
-                        </div>
-                        <div class="item-price-info">
-                            <p class="item-price">${coin.rate.toLocaleString("en-US", {
-                                minimumFractionDigits: 2,
-                                maximumFractionDigits: 2
-                            })} PC</p>
-                            <div class="item-change ${coin.delta.day >= 1 ? 'positive' : 'negative'}">
-                                <i class="fa-solid ${coin.delta.day >= 1 ? 'fa-arrow-trend-up' : 'fa-arrow-trend-down'}"></i>
-                                <div class="change-amount">${coin.delta.day >= 1 ? '+' : ''}${((coin.delta.day-1)*100).toFixed(2)}%</div>
-                                <div class="change-interval">(1d)</div>
-                            </div>
-                        </div>
-                    `;
-
-                    sidebarCoins.appendChild(coinElement);
-
-                    coinElement.addEventListener('click', () => {
-                        toggleSelected(coinElement);
-                    });
-                })
-            }
-        });
+function saveHistoryData() {
+    if (historyData) {
+        localStorage.setItem('historyData', JSON.stringify(historyData));
     }
 }
 
-function toggleSelected(element) {
+function saveCurrentCoins() {
+    localStorage.setItem('currentCoins', JSON.stringify(currentCoins));
+}
+
+async function loadData() {
+    const sidebarCoins = localStorage.getItem('currentCoins');
+    const coin = localStorage.getItem('coinData');
+    const history = localStorage.getItem('historyData');
+    if (!sidebarCoins) {
+        currentCoins = ['BTC', 'ETH', 'XRP'];
+        saveCurrentCoins();
+    } else {
+        currentCoins = JSON.parse(sidebarCoins);
+    }
+    if (!coin) {
+        await fetchCoinData(currentCoins);
+        saveCoinData();
+    } else {
+        coinData = JSON.parse(coin);
+    }
+    if (!history) {
+        historyData = {};
+    } else {
+        historyData = JSON.parse(history);
+    }
+    console.log(coinData);
+    console.log(historyData);
+    loadSidebar();
+}
+
+async function loadSidebar() {
+    const sidebarCoins = document.querySelector('.sidebar-coins');
+    sidebarCoins.querySelectorAll('.sidebar-item').forEach(el => el.remove());
+    if (currentCoins.length > 0) {
+
+        currentCoins.forEach(cCoin => {
+            let coin = coinData.find(c => c.code === cCoin);
+            const coinElement = document.createElement('div');
+            coinElement.classList.add('sidebar-item');
+            coinElement.dataset.code = coin.code;
+            coinElement.innerHTML = `
+                <div class="item-main-info">
+                    <img src="${coin.png32}" alt="${coin.symbol ? coin.symbol : ""}" class="item-logo">
+                    <h2 class="item-name">${coin.name} (${coin.code.replace(/_/g, '')})</h2>
+                </div>
+                <div class="item-price-info">
+                    <p class="item-price">${coin.rate.toLocaleString("en-US", {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2
+                    })} PC</p>
+                    <div class="item-change ${coin.delta.day >= 1 ? 'positive' : 'negative'}">
+                        <i class="fa-solid ${coin.delta.day >= 1 ? 'fa-arrow-trend-up' : 'fa-arrow-trend-down'}"></i>
+                        <div class="change-amount">${coin.delta.day >= 1 ? '+' : ''}${((coin.delta.day-1)*100).toFixed(2)}%</div>
+                        <div class="change-interval">(1d)</div>
+                    </div>
+                </div>
+            `;
+
+            sidebarCoins.appendChild(coinElement);
+
+            coinElement.addEventListener('click', () => {
+                toggleSelected(coinElement, coin.code);
+            });
+        });
+        
+    }
+}
+
+const coinContent = document.querySelector('.coin-content');
+const portfolioContent = document.querySelector('.portfolio-content');
+
+function toggleSelected(element, code = null) {
     document.querySelectorAll('.sidebar-item').forEach(el => {
         el.classList.remove('selected');
     });
     element.classList.toggle('selected');
+
+    coinContent.classList.add('active');
+    portfolioContent.classList.remove('active');
+    if (code) {
+        selectedCoin = code;
+    
+        if (Object.keys(historyData).includes(code)) {
+            updateChart(true);
+            updateChart();
+        } else {
+            fetchCoinHistory(code).then(() => {
+                saveHistoryData();
+                updateChart();
+            });
+        }
+    }
 }
 
 const portfolioButton = document.querySelector('.sidebar-portfolio');
 
 portfolioButton.addEventListener('click', () => {
     toggleSelected(portfolioButton);
+    coinContent.classList.remove('active');
+    portfolioContent.classList.add('active');
 });
 
 const addCoinButton = document.querySelector('.add-coin-button');
@@ -253,7 +166,7 @@ fetch('/coins.json').then(response => response.json()).then(data => {
         const coinElement = document.createElement('div');
         coinElement.classList.add('coin-result');
         coinElement.dataset.code = coin.code;
-        if (coinCodes.includes(coin.code)) {
+        if (currentCoins.includes(coin.code)) {
             coinElement.classList.add('selected');
         }
         coinElement.innerHTML = `
@@ -297,8 +210,18 @@ closeModalButton.addEventListener('click', () => {
         selectedCoins.push(code);
     });
 
-    if (JSON.stringify(selectedCoins) !== JSON.stringify(coinCodes)) {
-        saveCoinCodes(selectedCoins); 
+    if (JSON.stringify(selectedCoins) !== JSON.stringify(currentCoins)) {
+        currentCoins = selectedCoins;
+        saveCurrentCoins();
+        const foundAllCoins = currentCoins.every(code => coinData.find(c => c.code === code));
+        if (foundAllCoins) {
+            loadSidebar();
+        } else {
+            fetchCoinData(currentCoins).then(() => {
+                saveCoinData();
+                loadSidebar();
+            });
+        }
     }
 });
 
@@ -306,7 +229,7 @@ const coinActionInput = document.querySelector('.action-input');
 const coinActionAmount = document.querySelector('.action-amount');
 
 coinActionInput.addEventListener('input', () => {
-    const amount = parseFloat(coinActionInput.value * coinPrice);
+    const amount = parseFloat(parseFloat(coinActionInput.value).toFixed(4) * coinPrice);
     if (!isNaN(amount)) {
         coinActionAmount.textContent = `${amount.toLocaleString("en-US", {
             minimumFractionDigits: 2,
@@ -316,3 +239,84 @@ coinActionInput.addEventListener('input', () => {
         coinActionAmount.textContent = '0.00 PC';
     }
 });
+
+coinActionInput.addEventListener('blur', () => {
+    coinActionInput.value = Number(parseFloat(coinActionInput.value).toFixed(4));
+});
+
+const coinChart = document.querySelector('.coin-chart').getContext('2d');
+
+let chart = null;
+
+async function updateChart(empty = false) {
+    if (!chart) {
+        chart = new Chart(coinChart, {
+            type: 'line',
+            data: {
+                labels: historyData[selectedCoin].history.map(entry => 
+                    new Date(entry.date).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
+                ),
+                datasets: [{
+                    label: 'Price (PC)',
+                    data: historyData[selectedCoin].history.map(entry => entry.rate.toFixed(2)),
+                    borderColor: '#7f60e6ff',
+                    backgroundColor: '#9f88e866',
+                    fill: true,
+                    tension: 0.2
+                }],
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        display: true,
+                        title: {
+                            display: false,
+                        },
+                        ticks: {
+                            autoSkip: true,
+                            maxTicksLimit: 6
+                        }
+                    },
+                    y: {
+                        display: true,
+                        title: {
+                            display: false,
+                        },
+                        ticks: {
+                            callback: function(value) {
+                                return value.toLocaleString() + " PC";
+                            },
+                            autoSkip: true,
+                            maxTicksLimit: 4
+                        },
+                        grid : {
+                            drawOnChartArea: false,
+                        },
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                }
+            }
+        });
+    }
+
+    chart.data.labels = [];
+        chart.data.datasets[0].data = [];
+        chart.update();
+    if (empty) {
+        return;
+    } else {
+        chart.data.labels = historyData[selectedCoin].history.map(entry => 
+            new Date(entry.date).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
+        );
+        chart.data.datasets[0].data = historyData[selectedCoin].history.map(entry => entry.rate.toFixed(2));
+
+        chart.update();
+    }
+    
+}

@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/ConstintCreations/Paper-Chain#readme",
   "dependencies": {
+    "chart.js": "^4.5.0",
     "dotenv": "^17.2.3",
     "express": "^5.1.0",
     "fs": "^0.0.1-security",

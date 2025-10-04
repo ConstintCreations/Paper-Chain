@@ -13,8 +13,9 @@ const PORT = process.env.PORT || 3000;
 const LIVECOINWATCH_API_KEY = process.env.LIVECOINWATCH_API_KEY;
 
 app.use(express.static(__dirname));
+app.use('/libs', express.static(__dirname + '/node_modules'));
 
-app.get('/api/coin', async (request, response) => {
+app.get('/api/coins', async (request, response) => {
     const codes = request.query.codes ? request.query.codes.split(',') : ['BTC', 'ETH', 'XRP'];
     try {
         const apiResponse = await fetch('https://api.livecoinwatch.com/coins/map', {
@@ -25,18 +26,42 @@ app.get('/api/coin', async (request, response) => {
             },
             body: JSON.stringify({
                 currency: 'USD',
-                code: codes,
-                meta: true,
+                codes: codes,
                 sort: 'rank',
                 order: 'ascending',
                 offset: 0,
-                limit: codes.length
+                meta: true,
             })
         });
+        
         const data = await apiResponse.json();
         response.json(data);
     } catch (error) {
-        response.status(500).send('Error fetching coin data: ' + error.message);
+        response.status(500).send('Error fetching coin history: ' + error.message);
+    }
+});
+
+app.get('/api/coin/history', async (request, response) => {
+    const code = request.query.code || 'BTC';
+    try {
+        const apiResponse = await fetch('https://api.livecoinwatch.com/coins/single/history', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'x-api-key': LIVECOINWATCH_API_KEY
+            },
+            body: JSON.stringify({
+                currency: 'USD',
+                code: code,
+                start: Date.now() - 24 * 60 * 60 * 1000, 
+                end: Date.now()
+            })
+        });
+        
+        const data = await apiResponse.json();
+        response.json(data);
+    } catch (error) {
+        response.status(500).send('Error fetching coin history: ' + error.message);
     }
 });
 
