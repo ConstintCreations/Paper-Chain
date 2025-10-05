@@ -379,6 +379,14 @@ body {
     font-size: 1em;
 }
 
+.action-button {
+    transition: background-color 0.3s ease-in-out;
+}
+
+.action-button:hover {
+    background-color: #3c3b42;
+}
+
 .action-input {
     cursor: text;
     transition: border 0.3s ease-in-out;
@@ -410,7 +418,7 @@ body {
 }
 
 .coin-chart {
-    background-color: #3c3b42;
+    background-color: #2e2d34;
     border-radius: 20px;
     width: 20%;
     height: 100%;
