@@ -6,4 +6,3 @@ yarn-error.log*
 Thumbs.db
 .env
 *.cfg
-index.js
