@@ -5,7 +5,6 @@ let selectedCoin = null;
 let balance = 100000.00;
 let lastAccessedCoinData;
 let lastAccessedCoinHistory = {};
-let transactions = [];
 let portfolio = {};
 
 async function fetchCoinData(codes = ['BTC', 'ETH', 'XRP']) {
@@ -32,6 +31,13 @@ async function fetchCoinHistory(code = 'BTC') {
     }
 }
 
+const balanceAmountElement = document.querySelector('.balance-amount');
+const portfolioValuationElement = document.querySelector('.portfolio-value');
+const balanceElement = document.querySelector('.balance');
+const valuationElement = document.querySelector('.valuation');
+
+const portfolioItemsContainer = document.querySelector('.portfolio-items');
+
 /*fetchCoinHistory('BTC').then(data => {
     if (data) {
         console.log('Coin History:', data);
@@ -49,19 +55,14 @@ loadData();
 
 function savePortfolioStuff() {
     localStorage.setItem('balance', balance);
-    localStorage.setItem('transactions', JSON.stringify(transactions));
     localStorage.setItem('portfolio', JSON.stringify(portfolio));
 }
 
 function loadPortfolioStuff() {
     const savedBalance = localStorage.getItem('balance');
-    const savedTransactions = localStorage.getItem('transactions');
     const savedPortfolio = localStorage.getItem('portfolio');
     if (savedBalance) {
         balance = parseFloat(savedBalance);
-    }
-    if (savedTransactions) {
-        transactions = JSON.parse(savedTransactions);
     }
     if (savedPortfolio) {
         portfolio = JSON.parse(savedPortfolio);
@@ -117,6 +118,7 @@ async function loadData() {
     }
     loadPortfolioStuff();
     loadSidebar();
+    updatePortfolio();
 }
 
 async function loadSidebar() {
@@ -156,42 +158,7 @@ async function loadSidebar() {
                 toggleSelected(coinElement, coin.code);
             });
         });
-        
     }
-
-    const balanceElement = document.querySelector('.balance');
-    balanceElement.textContent = `${balance.toLocaleString("en-US", {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2
-    })} PC`;
-    const portfolioChangeElement = document.querySelector('.portfolio-change');
-
-    if (transactions.length > 0) {
-        const oneDayAgo = Date.now() - 24 * 60 * 60 * 1000;
-        let valuationOneDayAgo = null; 
-        transactions.forEach((transaction, index) => {
-            if (transaction.date < oneDayAgo && index === 0) {
-                valuationOneDayAgo = transaction.totalValuation;
-            }
-        });
-        if (!valuationOneDayAgo) {
-            const oldestTransaction = transactions.reduce((oldest, transaction) => {
-                return transaction.date < oldest.date ? transaction : oldest;
-            }, transactions[0]);
-            valuationOneDayAgo = oldestTransaction.totalValuation;
-        }
-        if (valuationOneDayAgo && portfolio.valuation) {
-            const change = ((portfolio.valuation - valuationOneDayAgo) / valuationOneDayAgo) * 100;
-            portfolioChangeElement.classList.remove('positive', 'negative');
-            portfolioChangeElement.classList.add(change >= 0 ? 'positive' : 'negative');
-            portfolioChangeElement.innerHTML = `
-                <i class="fa-solid ${change >= 0 ? 'fa-arrow-trend-up' : 'fa-arrow-trend-down'}"></i>
-                <div class="change-amount">${change >= 0 ? '+' : ''}${change.toFixed(2)}%</div>
-                <div class="change-interval">(1d)</div>
-            `;
-        }
-    }
-    
 }
 
 const coinContent = document.querySelector('.coin-content');
@@ -481,80 +448,114 @@ buyButton.addEventListener('click', () => {
     }
     if (totalCost > 0 && totalCost <= balance) {
         balance -= totalCost;
-        let transaction = {
-            type: 'buy',
-            code: selectedCoin,
-            amount: amount,
-            price: price,
-            totalCost: totalCost,
-            totalValuation: portfolio.valuation ? portfolio.valuation : 100000,
-            date: Date.now()
-        };
-        transactions.push(transaction);
 
-        if (Object.keys(portfolio).length === 0) {
-            portfolio = {
-                coins: {
-                    [selectedCoin]: { amount: amount, cost: totalCost }
-                },
-                valuation: 100000
-            }
+        portfolio.coins = portfolio.coins ? portfolio.coins : {};
+        if (Object.keys(portfolio.coins).includes(selectedCoin)) {
+            let existingAmount = portfolio.coins[selectedCoin].amount;
+            let existingCost = portfolio.coins[selectedCoin].cost;
+            portfolio.coins[selectedCoin].amount = parseFloat((existingAmount + amount).toFixed(4));
+            portfolio.coins[selectedCoin].cost = parseFloat((existingCost + totalCost).toFixed(2));
         } else {
-            if (Object.keys(portfolio.coins).includes(selectedCoin)) {
-                let existingAmount = portfolio.coins[selectedCoin].amount;
-                let existingCost = portfolio.coins[selectedCoin].cost;
-                portfolio.coins[selectedCoin].amount = parseFloat((existingAmount + amount).toFixed(4));
-                portfolio.coins[selectedCoin].cost = parseFloat((existingCost + totalCost).toFixed(2));
-            } else {
-                portfolio.coins[selectedCoin] = { amount: amount, cost: totalCost };
-            }
+            portfolio.coins[selectedCoin] = {
+                amount: amount,
+                cost: totalCost
+            };
         }
     }    
-    savePortfolioStuff();
     coinActionInput.value = 0;
     coinActionAmount.textContent = '0.00 PC';
-    loadSidebar();
+    updatePortfolio();
 });
 
 
 sellButton.addEventListener('click', () => {
-    const amount = parseFloat(parseFloat(coinActionInput.value).toFixed(4));
+    let amount = parseFloat(parseFloat(coinActionInput.value).toFixed(4));
     const price = parseFloat(coinData.find(c => c.code === selectedCoin).rate).toFixed(2);
     let totalGain = 0;
     if (!isNaN(amount) && amount > 0) {
         totalGain = parseFloat((amount * price).toFixed(2));
     }
-    if (totalGain > 0 && Object.keys(portfolio).length > 0 && Object.keys(portfolio.coins).includes(selectedCoin) && amount <= portfolio.coins[selectedCoin].amount) {
-        balance += totalGain;
-        let transaction = {
-            type: 'sell',
-            code: selectedCoin,
-            amount: amount,
-            price: price,
-            totalGain: totalGain,
-            totalValuation: portfolio.valuation ? portfolio.valuation : 100000,
-            date: Date.now()
-        };
-        transactions.push(transaction);
-        let existingAmount = portfolio.coins[selectedCoin].amount;
-        let existingCost = portfolio.coins[selectedCoin].cost;
-        portfolio.coins[selectedCoin].amount = parseFloat((existingAmount - amount).toFixed(4));
-        if (portfolio.coins[selectedCoin].amount === 0) {
-            delete portfolio.coins[selectedCoin];
+    if (Object.keys(portfolio).length > 0 && Object.keys(portfolio.coins).includes(selectedCoin)) {
+        if (amount > portfolio.coins[selectedCoin].amount) {
+            amount = portfolio.coins[selectedCoin].amount;
+            totalGain = parseFloat((amount * price).toFixed(2));
         }
-        let costPerCoin = existingCost / existingAmount;
-        let costReduction = parseFloat((costPerCoin * amount).toFixed(2));
-        portfolio.coins[selectedCoin].cost = parseFloat((existingCost - costReduction).toFixed(2));
+        balance += totalGain;
+        let existingAmount = portfolio.coins[selectedCoin].amount;
+        if (existingAmount - amount <= 0) {
+            delete portfolio.coins[selectedCoin];
+        } else {
+            let existingCost = portfolio.coins[selectedCoin].cost;
+            let proportion = amount / existingAmount;
+            let costReduction = parseFloat((existingCost * proportion).toFixed(2));
+            portfolio.coins[selectedCoin].amount = parseFloat((existingAmount - amount).toFixed(4));
+            portfolio.coins[selectedCoin].cost = parseFloat((existingCost - costReduction).toFixed(2));
+        }
     }
-    savePortfolioStuff();
     coinActionInput.value = 0;
     coinActionAmount.textContent = '0.00 PC';
-    loadSidebar();
+    updatePortfolio();
 });
+
+function updatePortfolio() {
+    balanceAmountElement.textContent = `${balance.toLocaleString("en-US", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    })} PC`;
+
+    balanceElement.textContent = `${balance.toLocaleString("en-US", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    })} PC`;
+
+    let totalValuation = balance;
+
+    portfolioItemsContainer.innerHTML = '';
+
+    if (Object.keys(portfolio).length > 0) {
+        if (Object.keys(portfolio.coins).length > 0) {
+            Object.keys(portfolio.coins).forEach(code => {
+                const coin = coinData.find(c => c.code === code);
+                const amount = portfolio.coins[code].amount;
+                const cost = portfolio.coins[code].cost;
+                const currentPrice = parseFloat(coin.rate).toFixed(2);
+                const valuation = parseFloat((amount * currentPrice).toFixed(2));
+                totalValuation += valuation;
+                const profitLoss = parseFloat((valuation - cost).toFixed(2));
+                const profitLossPercent = ((profitLoss / cost) * 100).toFixed(2);
+                const itemElement = document.createElement('div');
+                itemElement.classList.add('portfolio-item');
+                itemElement.innerHTML = `
+                    <div class="portfolio-item-name">
+                        <img src="${coin.png32}" class="portfolio-item-coin-logo">
+                        <h2 class="portfolio-item-coin-name">${coin.name} (${coin.code.replace(/_/g, '')})</h2>
+                    </div>
+                    <div class="portfolio-item-info">
+                        <div class="portfolio-item-info-title">Amount<h2 class="portfolio-item-amount">${amount} ${coin.code.replace(/_/g, '')}</h2></div>
+                        <div class="portfolio-item-info-title">Value<h2 class="portfolio-item-value">${valuation} PC</h2></div>
+                        <div class="portfolio-item-info-title">Profit<h2 class="portfolio-item-profit-loss ${profitLoss >= 0 ? 'up' : 'down'}">${profitLoss >= 0 ? '+' : ''}${profitLoss} PC (${profitLoss >= 0 ? '+' : ''}${profitLossPercent}%)</h2></div>
+                    </div>
+                `;
+                portfolioItemsContainer.appendChild(itemElement);
+            });
+        }
+    }
+    portfolio.valuation = parseFloat(totalValuation.toFixed(2));
+    portfolioValuationElement.textContent = `${portfolio.valuation.toLocaleString("en-US", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    })} PC`;
+    valuationElement.textContent = `(${portfolio.valuation.toLocaleString("en-US", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    })} PC)`;
+    savePortfolioStuff();
+}
 
 setInterval(() => {
     fetchCoinData(currentCoins).then(() => {
         saveCoinData();
         loadSidebar();
+        updatePortfolio();
     });
 }, 15000);

@@ -192,8 +192,12 @@ body {
     gap: 0.5em;
 }
 
+.portfolio-item-price-info {
+    width: 100%;
+}
+
 .item-price-small {
-    font-size: 0.7em;
+    font-size: 0.8em;
     color: #8b888f;
 }
 
@@ -458,4 +462,40 @@ body {
 
 .down {
     color: #8c2222;
+}
+
+.portfolio-items {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+    overflow-y: auto;
+    overflow-x: hidden;
+    height: 70%;
+    scrollbar-color: #646267 transparent;
+}
+
+.portfolio-item {
+    display: flex;
+    flex-direction: row;
+    border: 1px solid #646267;
+    border-radius: 20px; 
+    align-items: center;
+    justify-content: space-between;
+    padding: 1em;
+    background-color: #2e2d34;
+    gap: 3em;
+}
+
+.portfolio-item-name {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 1em;
+}
+
+.portfolio-item-info {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 2em;
 }
