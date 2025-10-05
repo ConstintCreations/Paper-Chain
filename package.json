@@ -4,7 +4,8 @@
   "description": "Paper-trade cryptocurrencies",
   "main": "index.js",
   "scripts": {
-    "test": "node ."
+    "test": "node .",
+    "start": "node script.js"
   },
   "repository": {
     "type": "git",
