@@ -107,6 +107,7 @@ body {
     gap: 0.5em;
     overflow-y: auto;
     overflow-x: hidden;
+    scrollbar-color: #646267 transparent;
 }
 
 .sidebar-coins-title {
